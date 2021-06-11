@@ -13,11 +13,13 @@ router
     .get(async (req, res, next) => {
         try {
             const data = await Product.findAll({
-                include: {
-                    model: Category,
-                    through: { attributes: [] },
-                    where: req.query.category ? { _id: req.query.category } : null
-                },
+                include: req.query.category
+                    ? {
+                          model: Category,
+                          through: { attributes: [] },
+                          where: { _id: req.query.category }
+                      }
+                    : null,
                 offset: req.query.offset,
                 limit: req.query.limit
             })
@@ -42,7 +44,8 @@ router
         try {
             const data = await Product.findByPk(req.params.id, {
                 include: {
-                    model: Review,
+                    model: Category,
+                    through: { attributes: [] },
                     attributes: {
                         exclude: ["productId"]
                     }
@@ -99,6 +102,15 @@ router.route("/:id/reviews").get(async (req, res, next) => {
         res.send(data)
     } catch (error) {
         next(error.message)
+    }
+})
+
+router.route("/:id/reviews").post(async (req, res, next) => {
+    try {
+        const data = await Review.create({ ...req.body, productId: req.params.id })
+        res.send(data)
+    } catch (error) {
+        next(error)
     }
 })
 

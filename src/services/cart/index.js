@@ -22,9 +22,12 @@ router
 
     .post(async (req, res, next) => {
         try {
-            if (!req.body.productId) next(createError(400, "Product ID must be present."))
-            const data = await Cart.create(req.body)
-            res.send(data)
+            if (!req.body.userId) next(createError(400, "User ID must be present."))
+            else if (!req.body.productId) next(createError(400, "Product ID must be present."))
+            else {
+                const data = await Cart.create(req.body)
+                res.send(data)
+            }
         } catch (error) {
             next(error.message)
         }

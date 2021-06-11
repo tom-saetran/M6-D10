@@ -62,4 +62,15 @@ router
         }
     })
 
+router.get("/:id/cart", async (req, res, next) => {
+    try {
+        const data = await User.findByPk(req.params.id, {
+            include: { model: models.Cart, attributes: { exclude: ["userId"] } }
+        })
+        res.send(data)
+    } catch (error) {
+        next(error.message)
+    }
+})
+
 export default router
