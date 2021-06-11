@@ -1,8 +1,7 @@
 import express from "express"
 import models from "../../db/index.js"
-import createError from "http-errors"
 
-const Review = models.Review
+const User = models.User
 
 const router = express.Router()
 
@@ -10,7 +9,7 @@ router
     .route("/")
     .get(async (req, res, next) => {
         try {
-            const data = await Review.findAll({
+            const data = await User.findAll({
                 offset: req.query.offset,
                 limit: req.query.limit
             })
@@ -22,11 +21,8 @@ router
 
     .post(async (req, res, next) => {
         try {
-            if (!req.body.productId) next(createError(400, "Product ID required"))
-            else {
-                const data = await Review.create(req.body)
-                res.send(data)
-            }
+            const data = await User.create(req.body)
+            res.send(data)
         } catch (error) {
             next(error)
         }
@@ -36,7 +32,7 @@ router
     .route("/:id")
     .get(async (req, res, next) => {
         try {
-            const data = await Review.findByPk(req.params.id)
+            const data = await User.findByPk(req.params.id)
             res.send(data)
         } catch (error) {
             next(error.message)
@@ -45,7 +41,7 @@ router
 
     .put(async (req, res, next) => {
         try {
-            const data = await Review.update(req.body, {
+            const data = await User.update(req.body, {
                 where: { _id: req.params.id },
                 returning: true
             })
@@ -58,7 +54,7 @@ router
 
     .delete(async (req, res, next) => {
         try {
-            const row = await Review.destroy({ where: { _id: req.params.id } })
+            const row = await User.destroy({ where: { _id: req.params.id } })
             if (row > 0) res.send("Deleted")
             else res.status(404).send("ID not found")
         } catch (error) {

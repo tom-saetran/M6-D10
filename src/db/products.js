@@ -29,10 +29,6 @@ export default (sequelize, DataTypes) => {
         price: {
             type: DataTypes.DOUBLE,
             allowNull: false
-        },
-        category: {
-            type: DataTypes.TEXT,
-            allowNull: false
         }
     })
     return Product
